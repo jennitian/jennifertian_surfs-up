@@ -31,6 +31,7 @@ session = Session(engine)
 #flask app
 app = Flask(__name__)
 
+#Welcome route
 @app.route("/")
 def welcome():
 	return(
@@ -42,6 +43,7 @@ def welcome():
         /api/v1.0/temp/start/end<br/>'''
 	)
 
+#precipitation route
 @app.route("/api/v1.0/precipitation")
 def precipitation():
         prev_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
@@ -50,12 +52,14 @@ def precipitation():
         precip = {date: prcp for date, prcp in precipitation}
         return jsonify(precip)
 
+#station route
 @app.route("/api/v1.0/stations")
 def stations():
         results = session.query(station.station).all()
         stations = list(np.ravel(results))
         return jsonify(stations)
 
+#temp route
 @app.route("/api/v1.0/tobs")
 def temp_monthly():
         prev_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
@@ -65,6 +69,7 @@ def temp_monthly():
         temps = list(np.ravel(results))        
         return jsonify(temps)
 
+#start/end date route
 @app.route("/api/v1.0/temp/<start>")
 @app.route("/api/v1.0/temp/<start>/<end>")
 def stats(start=None, end=None):
@@ -81,5 +86,6 @@ def stats(start=None, end=None):
         temps = list(np.ravel(results))
         return jsonify(temps)
 
+#run flask app
 if __name__=='__main__':
         app.run()
